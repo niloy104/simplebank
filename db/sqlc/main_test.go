@@ -14,6 +14,7 @@ import (
 const dbSource = "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
 
 var testQueries *Queries
+var testDB DBTX
 
 func TestMain(m *testing.M) {
 	ctx := context.Background()
@@ -22,8 +23,12 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal("cannot create connection pool:", err)
 	}
-	defer pool.Close()
 
-	testQueries = New(pool)
-	os.Exit(m.Run())
+	testDB = pool
+	testQueries = New(testDB)
+
+	code := m.Run()
+
+	pool.Close()
+	os.Exit(code)
 }
