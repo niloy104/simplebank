@@ -11,3 +11,4 @@ sql:
         emit_json_tags: true
         emit_interface: false   # ok in v1.30
         emit_prepared_queries: false
+        emit_empty_slices: true

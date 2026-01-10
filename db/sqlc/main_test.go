@@ -7,19 +7,22 @@ import (
 	"testing"
 
 	_ "github.com/lib/pq"
+	"github.com/niloy104/simplebank/util"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
-
-const dbSource = "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
 
 var testQueries *Queries
 var testDB DBTX
 
 func TestMain(m *testing.M) {
-	ctx := context.Background()
+	config, err := util.LoadConfig("../..")
+	if err != nil {
+		log.Fatal("cannot load config: ", err)
+	}
 
-	pool, err := pgxpool.New(ctx, dbSource)
+	ctx := context.Background()
+	pool, err := pgxpool.New(ctx, config.DBSource)
 	if err != nil {
 		log.Fatal("cannot create connection pool:", err)
 	}
