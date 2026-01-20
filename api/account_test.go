@@ -91,7 +91,8 @@ func TestGetAccountAPI(t *testing.T) {
 			tc.buildStubs(store)
 
 			//start test sever & send request
-			server, err := NewServer(store)
+			config := util.Config{}
+			server, err := NewServer(config, store)
 			require.NoError(t, err)
 			recorder := httptest.NewRecorder()
 
