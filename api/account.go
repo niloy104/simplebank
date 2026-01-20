@@ -22,6 +22,17 @@ func (server *Server) createAccount(ctx *gin.Context) {
 		return
 	}
 
+	// Verify that the user exists before creating account
+	_, err := server.store.GetUser(ctx, req.Owner)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "user does not exist"})
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
 	arg := db.CreateAccountParams{
 		Owner:    req.Owner,
 		Currency: req.Currency,
@@ -42,7 +53,6 @@ func (server *Server) createAccount(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusCreated, account)
-
 }
 
 // Get Account by ID
