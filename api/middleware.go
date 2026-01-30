@@ -42,4 +42,4 @@ func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 		ctx.Next()
 
 	}
-}
+} //have toa some more cors middleware
