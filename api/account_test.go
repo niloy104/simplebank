@@ -173,14 +173,19 @@ func TestCreateAccountAPI(t *testing.T) {
 				arg := db.CreateAccountParams{
 					Owner:    user.Username,
 					Currency: account.Currency,
+					Balance:  0,
 				}
+				store.EXPECT().
+					GetUser(gomock.Any(), gomock.Eq(user.Username)).
+					Times(1).
+					Return(user, nil)
 				store.EXPECT().
 					CreateAccount(gomock.Any(), gomock.Eq(arg)).
 					Times(1).
 					Return(account, nil)
 			},
 			checkResopnse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
-				require.Equal(t, http.StatusOK, recorder.Code)
+				require.Equal(t, http.StatusCreated, recorder.Code)
 			},
 		},
 	}
